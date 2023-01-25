@@ -140,7 +140,7 @@ def choose_in_p():
 state_is_in_p_array = choose_in_p()
 
 # SYSTEM STATE MATRICES --------------------------------------------------------
-# ------------------------------------------------------------------------------
+# and data saving --------------------------------------------------------------
 
 # BUILDING MATRIX FOR STEADY STATE S_0, I_0=0, V_0=0 ---------------------------
 
@@ -177,7 +177,6 @@ a_used = np.concatenate((arr, arr2))
 
 print (a_used)
 
-
 # Trying to save matrix S_0/I_0/V_0 to file ------------------------------------
 # ------------------------------------------------------------------------------
 
@@ -195,3 +194,48 @@ np.save('S_P_matrix.npy', steady_P_matrix)
 
 #Human readable data
 np.savetxt('S_P_matrix.txt', steady_P_matrix)
+
+# Saving dictionary values for all used a (5 values used) ----------
+# ------------------------------------------------------------------
+
+alpha_array = np.zeros(len(a_used))
+mus_array = np.zeros(len(a_used))
+r_array = np.zeros(len(a_used))
+s_max_array = np.zeros(len(a_used))
+gamma_array = np.zeros(len(a_used))
+mui_array = np.zeros(len(a_used))
+muv_array = np.zeros(len(a_used))
+n_array = np.zeros(len(a_used))
+
+    
+for i in range(len(a_used)): #col
+
+        alpha_array[i] = max_dict["alpha"][1]*gen(a_used[i],max_dict["alpha"][0])
+        mus_array[i] = max_dict["mus"][1]*gen(a_used[i],max_dict["mus"][0])
+        r_array[i] = max_dict["r"][1]*gen(a_used[i],max_dict["r"][0])
+        s_max_array[i] = max_dict["s_max"][1]*gen(a_used[i],max_dict["s_max"][0])
+        gamma_array[i] = max_dict["gamma"][1]*gen(a_used[i],max_dict["gamma"][0])
+        mui_array[i] = max_dict["mui"][1]*gen(a_used[i],max_dict["mui"][0])
+        muv_array[i] = max_dict["muv"][1]*gen(a_used[i],max_dict["muv"][0])
+        n_array[i] = max_dict["n"][1]*gen(a_used[i],max_dict["n"][0])
+
+params_used_array = np.zeros(len(max_dict)*len(a_used))
+
+row_used = len(max_dict)
+col_used = len(a_used)
+params_used_matrix = np.zeros ((row_used,col_used))
+
+params_used_matrix[0,:] = alpha_array
+params_used_matrix[1,:] = mus_array
+params_used_matrix[2,:] = r_array
+params_used_matrix[3,:] = s_max_array
+params_used_matrix[4,:] = gamma_array
+params_used_matrix[5,:] = mui_array
+params_used_matrix[6,:] = muv_array
+params_used_matrix[7,:] = n_array
+
+# Binary data
+np.save('params_used_matrix.npy', params_used_matrix)
+
+# Human readable data
+np.savetxt('params_used_matrix.txt', params_used_matrix)
